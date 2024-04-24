@@ -9,8 +9,17 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+NAME = os.getenv('NAME')
+PG_USER = os.getenv('PG_USER')
+PASSWORD = os.getenv('PASSWORD')
+SECRET_KEY = os.getenv('SECRET_KEY')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+EMAIL = os.getenv('EMAIL')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a9^@t$e*-m0i!4i&b6!%ace9&d!4=tw-qs=mvkhld^gz22-!cb'
+SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'materials',
+    'django_filters',
 
 ]
 
@@ -82,9 +92,9 @@ WSGI_APPLICATION = 'django_rest_framework.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '12345',
+        'NAME': NAME,
+        'USER': PG_USER,
+        'PASSWORD': PASSWORD,
     }
 }
 
@@ -135,7 +145,12 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        # 'django_filters.rest_framework.OrderingFilter',
+        # 'django_filters.rest_framework.SearchFilter',
+    ),
 }
 
 MEDIA_URL = '/media/'
@@ -147,4 +162,4 @@ NULLABLE = {
         'blank': True,
         'null': True
 }
-admin_password = '12345'
+admin_password = ADMIN_PASSWORD

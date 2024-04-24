@@ -1,13 +1,13 @@
 from django.core.management import BaseCommand
 
-from django_rest_framework.settings import admin_password
+from django_rest_framework.settings import admin_password, EMAIL
 from users.models import User
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         user = User.objects.create(
-            email='admin@gmail.com',
+            email=EMAIL,
             phone_number='+5555555555',
             first_name='Admin',
             last_name='gmail',
