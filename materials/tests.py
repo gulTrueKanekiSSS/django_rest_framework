@@ -11,16 +11,13 @@ class LessonTestCase(APITestCase):
 
     def setUp(self):
 
-        self.user = User.objects.create_user(email='testuser', password='<PASSWORD>',)
+        self.user = User.objects.create_user(username=None, email='testuser', password='<PASSWORD>',)
 
         self.course = Course.objects.create(title='Test Course', description='Test Course')
 
         self.lesson_1 = Lesson.objects.create(name='Test Lesson 1', description='Test Lesson 1', course=self.course)
 
         self.lesson_2 = Lesson.objects.create(name='Test Lesson 2', description='Test Lesson 2', course=self.course)
-
-        self.client = APIClient()
-        self.client2 = APIClient()
 
         self.client.force_authenticate(user=self.user)
 
@@ -62,12 +59,10 @@ class LessonTestCase(APITestCase):
 class SubscriptionTestCase(APITestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(email='testuser', password='<PASSWORD>',)
+        self.user = User.objects.create_user(username=None, email='testuser', password='<PASSWORD>',)
         self.course = Course.objects.create(title='Test Course', description='Test Course')
         self.course2 = Course.objects.create(title='Test Course', description='Test Course')
 
-
-        self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
     def test_create_subscription(self):
