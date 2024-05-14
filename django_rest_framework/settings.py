@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -53,7 +55,8 @@ INSTALLED_APPS = [
     'materials',
     'django_filters',
     'rest_framework_simplejwt',
-    'drf_yasg'
+    'drf_yasg',
+    'django_celery_beat',
 
 ]
 
@@ -175,3 +178,27 @@ NULLABLE = {
         'null': True
 }
 admin_password = ADMIN_PASSWORD
+
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_TIMEZONE = os.getenv('CELERY_TIMEZONE')
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULE = {
+    'check_update': {
+        'task': 'materials.tasks.check_update',  # Путь к задаче
+        'schedule': crontab(minute='50', hour='23'),  # Расписание выполнения задачи (например, каждые 10 минут)
+    },
+    'check_last_login': {
+        'task': 'materials.tasks.check_last_login',
+        'schedule': crontab(minute='0', hour='0')
+    }
+}
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
